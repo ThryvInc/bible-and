@@ -1,0 +1,52 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "23.0.3"
+    defaultConfig {
+        applicationId "com.thryv.bible"
+        minSdkVersion 16
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    sourceSets {
+        amp_db_free {
+            manifest.srcFile 'src/amp_db_free/AndroidManifest.xml'
+            assets.srcDirs = ['src/amp_db_free/assets']
+            res.srcDirs = ['src/amp_db_free/res']
+        }
+        nkjv_db_free {
+            manifest.srcFile 'src/nkjv_db_free/AndroidManifest.xml'
+            assets.srcDirs = ['src/nkjv_db_free/assets']
+            res.srcDirs = ['src/nkjv_db_free/res']
+        }
+    }
+    productFlavors {
+        amp_db_free {
+            applicationId "com.thryvinc.amp_db_free"
+        }
+        nkjv_db_free {
+            applicationId "com.thryvinc.nkjv_db_free"
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:25.0.1'
+    compile 'com.android.support:design:25.0.1'
+    compile 'com.google.android.gms:play-services-ads:10.0.1'
+    compile 'com.android.support:recyclerview-v7:25.0.1'
+    testCompile 'junit:junit:4.12'
+}
