@@ -2,6 +2,7 @@ package com.thryv.bible.activities;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -24,6 +26,9 @@ import com.thryv.bible.adapters.BookAdapter;
 import com.thryv.bible.adapters.VerseAdapter;
 import com.thryv.bible.models.BibleManager;
 import com.thryv.bible.models.Book;
+import com.thryv.bible.models.NagController;
+import com.thryv.bible.models.Verse;
+import com.thryv.bible.views.VerseViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +40,6 @@ public class ReaderActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private Book book;
     private int chapter;
-    private boolean isSavedChapter = true;
     private List<Book> bookList;
     private Spinner spinner;
 
@@ -52,14 +56,25 @@ public class ReaderActivity extends AppCompatActivity {
         setupBookSpinner(toolbar);
         setupInitialBook();
         setupAds();
+
+        NagController.incrementNumberOfOpens(this);
+        String pkgName = getApplicationContext().getPackageName();
+        new NagController(this).startNag("market://details?id=" + pkgName, null);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     protected void setupInitialBook(){
         SharedPreferences preferences = getPreferences(Activity.MODE_PRIVATE);
+        int bookId = preferences.getInt(BOOK_KEY, 550);
+        int chapter = preferences.getInt(CHAPTER_KEY, 1);
 
         Book book = new Book();
-        book.setId(preferences.getInt(BOOK_KEY, 550));
-        setBook(book, preferences.getInt(CHAPTER_KEY, 1));
+        book.setId(bookId);
+        setBook(bookList.get(bookList.indexOf(book)), chapter);
     }
 
     protected void setupRecyclerView(){
@@ -85,11 +100,9 @@ public class ReaderActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (!isSavedChapter){
+                if (!bookList.get(position).equals(book)) {
                     setBook(bookList.get(position), 1);
                     invalidateOptionsMenu();
-                }else {
-                    isSavedChapter = false;
                 }
             }
 
@@ -132,8 +145,19 @@ public class ReaderActivity extends AppCompatActivity {
                 }
             };
 
+            VerseViewHolder.OnVerseLongClickListener verseLongClickListener = new VerseViewHolder.OnVerseLongClickListener() {
+                @Override
+                public void onVerseLongClicked(Verse verse) {
+                    Intent sendIntent = new Intent();
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, getShareableText(verse));
+                    sendIntent.setType("text/plain");
+                    startActivity(sendIntent);
+                }
+            };
+
             VerseAdapter adapter = new VerseAdapter(BibleManager.getBibleManager().getVerses(book, chapter),
-                    previousOnClickListener, nextOnClickListener);
+                    previousOnClickListener, nextOnClickListener, verseLongClickListener);
             recyclerView.setAdapter(adapter);
 
             invalidateOptionsMenu();
@@ -144,6 +168,13 @@ public class ReaderActivity extends AppCompatActivity {
                     .putInt(CHAPTER_KEY, chapter)
                     .apply();
         }
+    }
+
+    private String getShareableText(Verse verse){
+        String shareableText = "\"" +  verse.getPlainText();
+        shareableText += "\" — " + book.getAbbreviation();
+        shareableText += " " + verse.getChapter() + ":" + verse.getVerseNumber();
+        return shareableText;
     }
 
     @Override

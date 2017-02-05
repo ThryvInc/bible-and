@@ -1,4 +1,19 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
 
 android {
     compileSdkVersion 25
@@ -7,8 +22,8 @@ android {
         applicationId "com.thryv.bible"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "1.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -19,14 +34,28 @@ android {
     }
     sourceSets {
         amp_db_free {
-            manifest.srcFile 'src/amp_db_free/AndroidManifest.xml'
             assets.srcDirs = ['src/amp_db_free/assets']
             res.srcDirs = ['src/amp_db_free/res']
         }
         nkjv_db_free {
-            manifest.srcFile 'src/nkjv_db_free/AndroidManifest.xml'
             assets.srcDirs = ['src/nkjv_db_free/assets']
             res.srcDirs = ['src/nkjv_db_free/res']
+        }
+        nkjv_db_paid {
+            assets.srcDirs = ['src/nkjv_db_paid/assets']
+            res.srcDirs = ['src/nkjv_db_paid/res']
+        }
+        kjv_db_free {
+            assets.srcDirs = ['src/kjv_db_free/assets']
+            res.srcDirs = ['src/kjv_db_free/res']
+        }
+        niv_db_free {
+            assets.srcDirs = ['src/niv_db_free/assets']
+            res.srcDirs = ['src/niv_db_free/res']
+        }
+        asv_db_free {
+            assets.srcDirs = ['src/asv_db_free/assets']
+            res.srcDirs = ['src/asv_db_free/res']
         }
     }
     productFlavors {
@@ -36,6 +65,18 @@ android {
         nkjv_db_free {
             applicationId "com.thryvinc.nkjv_db_free"
         }
+        nkjv_db_paid {
+            applicationId "com.thryvinc.nkjv_db_paid"
+        }
+        kjv_db_free {
+            applicationId "com.thryvinc.kjv_db_free"
+        }
+        niv_db_free {
+            applicationId "com.thryvinc.niv_db_free"
+        }
+        asv_db_free {
+            applicationId "com.thryvinc.asv_db_free"
+        }
     }
 }
 
@@ -44,9 +85,12 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.0.1'
-    compile 'com.android.support:design:25.0.1'
+    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile 'com.android.support:design:25.1.0'
     compile 'com.google.android.gms:play-services-ads:10.0.1'
-    compile 'com.android.support:recyclerview-v7:25.0.1'
+    compile 'com.android.support:recyclerview-v7:25.1.0'
     testCompile 'junit:junit:4.12'
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
+        transitive = true;
+    }
 }

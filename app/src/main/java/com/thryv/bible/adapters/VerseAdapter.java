@@ -20,13 +20,16 @@ public class VerseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private List<Verse> verses;
     private View.OnClickListener nextChapterOnClickListener;
     private View.OnClickListener previousChapterOnClickListener;
+    private VerseViewHolder.OnVerseLongClickListener verseLongClickListener;
 
     public VerseAdapter(List<Verse> verses,
                         View.OnClickListener previousChapterOnClickListener,
-                        View.OnClickListener nextChapterOnClickListener) {
+                        View.OnClickListener nextChapterOnClickListener,
+                        VerseViewHolder.OnVerseLongClickListener verseLongClickListener) {
         this.verses = verses;
         this.nextChapterOnClickListener = nextChapterOnClickListener;
         this.previousChapterOnClickListener = previousChapterOnClickListener;
+        this.verseLongClickListener = verseLongClickListener;
     }
 
     @Override
@@ -34,7 +37,7 @@ public class VerseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         if (viewType == 0){
             View view = inflater.inflate(R.layout.item_verse, parent, false);
-            return new VerseViewHolder(view);
+            return new VerseViewHolder(view, verseLongClickListener);
         }else {
             View view = inflater.inflate(R.layout.item_bottom_nav, parent, false);
             return new BottomNavViewHolder(view,

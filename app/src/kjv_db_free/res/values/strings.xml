@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">New King James Bible</string>
+    <string name="app_name">King James Bible</string>
 
     <string name="action_chapter">Chapter 1</string>
 
@@ -7,5 +7,5 @@
         This is an ad unit ID for a banner test ad. Replace with your own banner ad unit id.
         For more information, see https://support.google.com/admob/answer/3052638
     <!- -->
-    <string name="banner_ad_unit_id">ca-app-pub-2574276621042285/6674389300</string>
+    <string name="banner_ad_unit_id">ca-app-pub-2574276621042285/9117994907</string>
 </resources>

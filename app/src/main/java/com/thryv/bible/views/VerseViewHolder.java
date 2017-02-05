@@ -1,7 +1,6 @@
 package com.thryv.bible.views;
 
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.view.View;
 import android.widget.TextView;
 
@@ -14,20 +13,29 @@ import com.thryv.bible.models.Verse;
 
 public class VerseViewHolder extends RecyclerView.ViewHolder {
     private TextView textView;
+    private OnVerseLongClickListener verseLongClickListener;
 
-    public VerseViewHolder(View itemView) {
+    public VerseViewHolder(View itemView, OnVerseLongClickListener listener) {
         super(itemView);
         textView = (TextView)itemView.findViewById(R.id.tv_verse);
+        verseLongClickListener = listener;
     }
 
-    public void bindVerse(Verse verse){
-        String verseText = verse.getText();
-        verseText = verseText.replaceAll("\\[[0-9]+\\]", "");
-        verseText = verseText.replaceAll("\n", "<br>");
-        if (verse.getVerseNumber() != 0){
-            verseText = "<b>" + verse.getVerseNumber() + "</b>" + "&nbsp;&nbsp;&nbsp;&nbsp;" + verseText;
+    public void bindVerse(final Verse verse){
+        textView.setText(verse.getTextForReading());
+
+        if (verseLongClickListener != null){
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    verseLongClickListener.onVerseLongClicked(verse);
+                    return false;
+                }
+            });
         }
-        textView.setText(Html.fromHtml(verseText));
     }
 
+    public interface OnVerseLongClickListener {
+        void onVerseLongClicked(Verse verse);
+    }
 }
