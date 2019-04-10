@@ -6,7 +6,7 @@ package com.thryv.bible.models;
 
 public class Book {
     private int id;
-    private String abbreviation;
+    private String abbreviation = "";
     private String name;
 
     @Override
@@ -17,7 +17,8 @@ public class Book {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Book){
-            return this.getId() == ((Book) obj).getId();
+            Book other = (Book) obj;
+            return this.getId() == other.getId() || this.getAbbreviation().equals(other.getAbbreviation());
         }else {
             return false;
         }

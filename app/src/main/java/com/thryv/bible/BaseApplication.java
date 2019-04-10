@@ -22,9 +22,8 @@ public class BaseApplication extends Application {
         Fabric.with(this, new Crashlytics());
         BibleManager.setBibleManager(new BaseDbBibleManager(this));
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/OpenSans-Light.ttf")
+                .setDefaultFontPath("fonts/Lora-Regular.ttf")
                 .setFontAttrId(R.attr.fontPath)
-                .build())
-        ;
+                .build());
     }
 }

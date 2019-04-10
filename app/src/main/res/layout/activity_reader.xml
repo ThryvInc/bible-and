@@ -28,12 +28,18 @@
                 android:layout_height="wrap_content"
                 />
 
+            <Spinner
+                android:id="@+id/chapterSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_verses"
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -47,5 +53,41 @@
         android:layout_gravity="bottom|center_horizontal"
         ads:adSize="BANNER"
         ads:adUnitId="@string/banner_ad_unit_id" />
+
+    <include
+        android:id="@+id/shareView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        layout="@layout/circle_button"/>
+
+    <include
+        android:id="@+id/redHighlightView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        layout="@layout/circle_button"/>
+
+    <include
+        android:id="@+id/yellowHighlightView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        layout="@layout/circle_button"/>
+
+    <include
+        android:id="@+id/greenHighlightView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        layout="@layout/circle_button"/>
+
+    <include
+        android:id="@+id/blueHighlightView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        layout="@layout/circle_button"/>
+
+    <include
+        android:id="@+id/exitView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        layout="@layout/circle_button"/>
 
 </android.support.design.widget.CoordinatorLayout>

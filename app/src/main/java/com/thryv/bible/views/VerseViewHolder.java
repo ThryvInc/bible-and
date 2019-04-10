@@ -15,15 +15,15 @@ import com.thryv.bible.models.Verse;
 
 public class VerseViewHolder extends RecyclerView.ViewHolder {
     private TextView textView;
-    private OnVerseLongClickListener verseLongClickListener;
+    private Verse verse;
 
-    public VerseViewHolder(View itemView, OnVerseLongClickListener listener) {
+    public VerseViewHolder(View itemView) {
         super(itemView);
         textView = (TextView) itemView.findViewById(R.id.tv_verse);
-        verseLongClickListener = listener;
     }
 
-    public void bindVerse(final Verse verse){
+    public void bindVerse(final Verse verse, String hexColorString){
+        this.verse = verse;
 //        String styleText = "<head>\n" +
 //                "<style type=\"text/css\">\n" +
 //                "@font-face {\n" +
@@ -39,20 +39,11 @@ public class VerseViewHolder extends RecyclerView.ViewHolder {
 //                "</head>";
 //        textView.loadDataWithBaseURL("file:///android_asset/", "<html>" + styleText + "<body>" + verse.getTextForReading() + "</body></html>", "text/html", "utf-8", null);
 
-        textView.setText(verse.getTextForReading());
-
-        if (verseLongClickListener != null){
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    verseLongClickListener.onVerseLongClicked(verse);
-                    return false;
-                }
-            });
-        }
+        textView.setText(verse.getTextForReading(hexColorString));
     }
 
-    public interface OnVerseLongClickListener {
-        void onVerseLongClicked(Verse verse);
+    public Verse getVerse(){
+        return verse;
     }
+
 }

@@ -17,11 +17,11 @@ import com.thryv.bible.R;
  * Created by ell on 10/12/16.
  */
 
-public class BookAdapter extends ArrayAdapter<String> implements ThemedSpinnerAdapter {
+public class ThemedStringAdapter extends ArrayAdapter<String> implements ThemedSpinnerAdapter {
     private final ThemedSpinnerAdapter.Helper mDropDownHelper;
     private Typeface font = Typeface.createFromAsset(getContext().getAssets(), "fonts/OpenSans-Light.ttf");
 
-    public BookAdapter(Context context, String[] objects) {
+    public ThemedStringAdapter(Context context, String[] objects) {
         super(context, android.R.layout.simple_list_item_1, objects);
         mDropDownHelper = new ThemedSpinnerAdapter.Helper(context);
     }

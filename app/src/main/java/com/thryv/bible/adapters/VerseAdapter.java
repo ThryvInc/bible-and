@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.thryv.bible.R;
+import com.thryv.bible.helpers.ItemLongPressHelper;
+import com.thryv.bible.models.BibleColorMapper;
 import com.thryv.bible.models.Verse;
 import com.thryv.bible.views.BottomNavViewHolder;
 import com.thryv.bible.views.VerseViewHolder;
@@ -20,16 +22,19 @@ public class VerseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private List<Verse> verses;
     private View.OnClickListener nextChapterOnClickListener;
     private View.OnClickListener previousChapterOnClickListener;
-    private VerseViewHolder.OnVerseLongClickListener verseLongClickListener;
+    private ItemLongPressHelper longPressHelper;
+    private BibleColorMapper colorMapper;
 
     public VerseAdapter(List<Verse> verses,
                         View.OnClickListener previousChapterOnClickListener,
                         View.OnClickListener nextChapterOnClickListener,
-                        VerseViewHolder.OnVerseLongClickListener verseLongClickListener) {
+                        ItemLongPressHelper.Callback verseLongClickListener,
+                        BibleColorMapper colorMapper) {
         this.verses = verses;
         this.nextChapterOnClickListener = nextChapterOnClickListener;
         this.previousChapterOnClickListener = previousChapterOnClickListener;
-        this.verseLongClickListener = verseLongClickListener;
+        this.longPressHelper = new ItemLongPressHelper(verseLongClickListener);
+        this.colorMapper = colorMapper;
     }
 
     @Override
@@ -37,7 +42,7 @@ public class VerseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         if (viewType == 0){
             View view = inflater.inflate(R.layout.item_verse, parent, false);
-            return new VerseViewHolder(view, verseLongClickListener);
+            return new VerseViewHolder(view);
         }else {
             View view = inflater.inflate(R.layout.item_bottom_nav, parent, false);
             return new BottomNavViewHolder(view,
@@ -49,7 +54,10 @@ public class VerseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (position != verses.size()){
-            ((VerseViewHolder)holder).bindVerse(verses.get(position));
+            Verse verse = verses.get(position);
+            String hexColorString = colorMapper.hexColorString(verse.getVerseNumber());
+            ((VerseViewHolder)holder).bindVerse(verse, hexColorString);
+            longPressHelper.attachToViewHolder(holder);
         }
     }
 

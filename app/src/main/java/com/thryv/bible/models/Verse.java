@@ -1,7 +1,12 @@
 package com.thryv.bible.models;
 
+import android.graphics.Color;
 import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
+import android.text.style.BackgroundColorSpan;
 
 /**
  * Created by ell on 10/12/16.
@@ -45,14 +50,18 @@ public class Verse {
         this.text = text;
     }
 
-    public Spanned getTextForReading(){
+    public Spanned getTextForReading(String hexColor){
         String verseText = text;
         verseText = verseText.replaceAll("\\[[0-9]+\\]", "");
         verseText = verseText.replaceAll("\n", "<br>");
         if (verseNumber != 0){
-            verseText = "<b>" + verseNumber + "</b>" + "&nbsp;&nbsp;&nbsp;&nbsp;<font face=\"serif\">" + verseText + "</font>";
+            verseText = "<b>" + verseNumber + "</b>" + "&nbsp;&nbsp;&nbsp;&nbsp;" +  verseText;
         }
-        return Html.fromHtml(verseText);
+        SpannableString spannable = new SpannableString(Html.fromHtml(verseText));
+        if (!TextUtils.isEmpty(hexColor)){
+            spannable.setSpan(new BackgroundColorSpan(Color.parseColor(hexColor)), 5, spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        return spannable;
     }
 
     public String getPlainText(){
