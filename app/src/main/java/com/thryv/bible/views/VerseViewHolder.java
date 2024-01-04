@@ -1,9 +1,7 @@
 package com.thryv.bible.views;
 
-import android.graphics.Typeface;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.TextView;
 
 import com.thryv.bible.R;

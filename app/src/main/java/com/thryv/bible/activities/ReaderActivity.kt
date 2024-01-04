@@ -9,19 +9,17 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.support.v4.content.res.ResourcesCompat
-import android.support.v4.graphics.drawable.DrawableCompat
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.Toolbar
 import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ImageButton
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdView
+import androidx.appcompat.widget.Toolbar
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.thryv.bible.R
 import com.thryv.bible.adapters.ThemedStringAdapter
 import com.thryv.bible.adapters.VerseAdapter
@@ -32,8 +30,9 @@ import com.thryv.bible.views.VerseViewHolder
 import kotlinx.android.synthetic.main.activity_reader.*
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 import java.util.*
+import kotlin.collections.HashSet
 
-class ReaderActivity : AppCompatActivity() {
+class ReaderActivity : AdActivity() {
 
     private var book: Book? = null
     private var chapter = 1
@@ -102,6 +101,10 @@ class ReaderActivity : AppCompatActivity() {
         setupInitialBook()
         setupAds()
         setupNagging()
+
+        actionButton.setOnClickListener {
+            startActivity(Intent(this, HighlightsActivity::class.java))
+        }
     }
 
     override fun onResume() {
@@ -259,7 +262,7 @@ class ReaderActivity : AppCompatActivity() {
     }
 
     protected fun setupRecyclerView() {
-        val manager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        val manager = androidx.recyclerview.widget.LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         recyclerView?.layoutManager = manager
     }
 
@@ -276,22 +279,15 @@ class ReaderActivity : AppCompatActivity() {
 
         spinner?.setSelection(bookList!!.indexOf(book))
 
-        spinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                if (bookList!![position] != book) {
+        spinner?.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (bookList != null && bookList?.get(position) != book) {
                     setBook(bookList!![position], 1)
                 }
             }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {}
         }
-    }
-
-    protected fun setupAds() {
-        val adView = findViewById<View>(R.id.adView) as AdView
-        val adRequest = AdRequest.Builder()
-                .setRequestAgent("android_studio:ad_template").build()
-        adView.loadAd(adRequest)
     }
 
     protected fun setupNagging() {
@@ -312,13 +308,13 @@ class ReaderActivity : AppCompatActivity() {
 
         val preferences = getPreferences(Context.MODE_PRIVATE)
         val editor = preferences.edit()
-        val set = preferences.getStringSet(chapterCode, HashSet())
+        val set = preferences.getStringSet(chapterCode, HashSet()) ?: HashSet()
         val previousReference = getPreviousReference(set, chosenVerse!!.verseNumber.toString() + ":")
         if (!TextUtils.isEmpty(previousReference) && previousReference == highlightCode) {
-            set!!.remove(highlightCode)
+            set.remove(highlightCode)
         } else {
-            if (previousReference != null) set!!.remove(previousReference)
-            set!!.add(highlightCode)
+            if (previousReference != null) set.remove(previousReference)
+            set.add(highlightCode)
         }
 
         //        Set<String> chapCodes = preferences.getStringSet("highlights", new HashSet<String>());
@@ -342,11 +338,13 @@ class ReaderActivity : AppCompatActivity() {
     }
 
     protected fun shareVerse(verse: Verse?) {
-        val sendIntent = Intent()
-        sendIntent.action = Intent.ACTION_SEND
-        sendIntent.putExtra(Intent.EXTRA_TEXT, getShareableText(verse!!))
-        sendIntent.type = "text/plain"
-        startActivity(sendIntent)
+        if (verse != null) {
+            val sendIntent = Intent()
+            sendIntent.action = Intent.ACTION_SEND
+            sendIntent.putExtra(Intent.EXTRA_TEXT, getShareableText(verse!!))
+            sendIntent.type = "text/plain"
+            startActivity(sendIntent)
+        }
     }
 
     private fun setBook(book: Book, chapter: Int) {
@@ -395,13 +393,11 @@ class ReaderActivity : AppCompatActivity() {
         chapterSpinner!!.adapter = ThemedStringAdapter(toolbar!!.context, chapterTitles)
         chapterSpinner!!.setSelection(chapter - 1)
         chapterSpinner!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
+            override fun onItemSelected(adapterView: AdapterView<*>?, view: View?, i: Int, l: Long) {
                 setBook(book!!, i + 1)
             }
 
-            override fun onNothingSelected(adapterView: AdapterView<*>) {
-
-            }
+            override fun onNothingSelected(adapterView: AdapterView<*>?) {}
         }
     }
 
@@ -424,9 +420,7 @@ class ReaderActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.action_highlights) {
-            startActivity(Intent(this, HighlightsActivity::class.java))
-        } else if (item.itemId == R.id.action_settings) {
+        if (item.itemId == R.id.action_settings) {
             startActivity(Intent(this, PrefsActivity::class.java))
         }
         return super.onOptionsItemSelected(item)

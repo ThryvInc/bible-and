@@ -3,12 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.thryv.bible.activities.ReaderActivity">
     <item
-        android:id="@+id/action_highlights"
-        android:orderInCategory="100"
-        android:title="Highlights"
-        android:icon="@drawable/highlighter"
-        app:showAsAction="always" />
-    <item
         android:id="@+id/action_settings"
         android:orderInCategory="200"
         android:title="Settings"

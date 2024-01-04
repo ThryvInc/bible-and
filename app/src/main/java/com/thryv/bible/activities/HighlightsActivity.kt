@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import com.thryv.bible.R
@@ -17,7 +17,7 @@ import java.util.regex.Pattern
  * Created by ell on 5/14/17.
  */
 
-class HighlightsActivity : AppCompatActivity() {
+class HighlightsActivity : AdActivity() {
     protected var verseAddresses: MutableList<String> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,6 +28,7 @@ class HighlightsActivity : AppCompatActivity() {
 
         setupVerseAddresses()
         setupRecyclerView()
+        setupAds()
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -64,11 +65,13 @@ class HighlightsActivity : AppCompatActivity() {
 
         listView?.adapter = arrayAdapter
         listView?.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
-            val verseAddress = verseAddresses[i]
-            val intent = Intent(this@HighlightsActivity, ReaderActivity::class.java)
-            intent.putExtra(ReaderActivity.CHAPTER_CODE, verseAddress.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0])
-            startActivity(intent)
-            finish()
+            if (i < verseAddresses.size) {
+                val verseAddress = verseAddresses[i]
+                val intent = Intent(this@HighlightsActivity, ReaderActivity::class.java)
+                intent.putExtra(ReaderActivity.CHAPTER_CODE, verseAddress.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0])
+                startActivity(intent)
+                finish()
+            }
         }
     }
 }

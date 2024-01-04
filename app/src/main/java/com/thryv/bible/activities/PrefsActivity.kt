@@ -31,13 +31,18 @@ class PrefsActivity: PreferenceActivity() {
             val hasAds = preferenceManager.sharedPreferences.getBoolean(hasAdsKey, defaultHasAds)
             preferenceManager.sharedPreferences.edit().putBoolean(hasAdsKey, hasAds).apply()
 
-            addPreferencesFromResource(R.xml.prefs)
+            addPreferencesFromResource(if (hasAds) R.xml.prefs else R.xml.paid_prefs)
 
             if (hasAds) {
                 findPreference(hasAdsKey)?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
                     val urlPart = "market://details?id="
-                    val pkgName = activity.applicationContext.packageName
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("$urlPart$pkgName.paid")))
+                    val pkgName = activity.applicationContext.packageName.replace("free", "paid")
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("$urlPart$pkgName")))
+                    return@OnPreferenceClickListener false
+                }
+                findPreference("privacy")?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+                    val urlPart = "https://elliotschrock.com/app-privacy-policy/"
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(urlPart)))
                     return@OnPreferenceClickListener false
                 }
             }
@@ -60,11 +65,6 @@ class PrefsActivity: PreferenceActivity() {
             }
             findPreference("translations")?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
                 val urlPart = "https://play.google.com/store/apps/developer?id=Thryv,+Inc&hl=en_US"
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(urlPart)))
-                return@OnPreferenceClickListener false
-            }
-            findPreference("privacy")?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-                val urlPart = "https://elliotschrock.com/app-privacy-policy/"
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(urlPart)))
                 return@OnPreferenceClickListener false
             }

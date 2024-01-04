@@ -55,7 +55,7 @@ public class Verse {
         verseText = verseText.replaceAll("\\[[0-9]+\\]", "");
         verseText = verseText.replaceAll("\n", "<br>");
         if (verseNumber != 0){
-            verseText = "<b>" + verseNumber + "</b>" + "&nbsp;&nbsp;&nbsp;&nbsp;" +  verseText;
+            verseText = "<i>" + verseNumber + "</i>" + "&nbsp;&nbsp;&nbsp;&nbsp;" +  verseText;
         }
         SpannableString spannable = new SpannableString(Html.fromHtml(verseText));
         if (!TextUtils.isEmpty(hexColor)){

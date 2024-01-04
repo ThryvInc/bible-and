@@ -1,8 +1,7 @@
 package com.thryv.bible.helpers;
 
-import android.support.v4.view.ViewCompat;
+import androidx.core.view.ViewCompat;
 import android.view.View;
-import android.widget.Button;
 
 /**
  * Created by ell on 4/9/16.

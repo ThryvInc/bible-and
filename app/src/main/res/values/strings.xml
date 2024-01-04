@@ -9,4 +9,5 @@
 
     <string name="has_ads">yes</string>
     <string name="banner_ad_unit_id">1</string>
+    <string name="title_instant">Instant Version</string>
 </resources>

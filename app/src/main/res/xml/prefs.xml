@@ -5,7 +5,7 @@
 
         <Preference
             android:key="appHasAds"
-            android:title="Has Ads"
+            android:title="Ads"
             android:summary="This controls whether you see ads or not." />
 
         <SwitchPreference

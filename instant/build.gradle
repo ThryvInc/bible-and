@@ -1,0 +1,30 @@
+apply plugin: 'com.android.dynamic-feature'
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+    }
+
+    flavorDimensions "default"
+    productFlavors {
+        amp_db_free {}
+        amp_db_paid {}
+        nkjv_db_free {}
+        nkjv_db_paid {}
+        kjv_db_free {}
+        kjv_db_paid {}
+        niv_db_free {}
+        niv_db_paid {}
+        asv_db_free {}
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':app')
+}

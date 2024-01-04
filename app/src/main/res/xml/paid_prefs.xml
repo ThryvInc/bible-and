@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="Preferences">
+
+        <SwitchPreference
+            android:key="darkMode"
+            android:checked="false"
+            android:title="Dark Mode"
+            android:summary="This switches the app to a dark theme." />
+
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="Other">
+
+        <Preference
+            android:key="contact"
+            android:title="Contact us"
+            android:summary="Have a question? Need help? Click to send us an email!" />
+
+        <Preference
+            android:key="translations"
+            android:title="Want another translation?"
+            android:summary="Try out some of our other apps by clicking here!" />
+
+    </PreferenceCategory>
+</PreferenceScreen>
